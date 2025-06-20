@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtest Performance</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Backtest Performance</h1>
+
+    <form action="/backtest" method="post" enctype="multipart/form-data">
+        <label for="csv_file">Carica il tuo file 'Export Bet-Analytix.csv':</label><br>
+        <input type="file" id="csv_file" name="csv_file" accept=".csv" required><br><br>
+        <button type="submit">Analizza</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">Errore: {{ error }}</p>
+    {% endif %}
+
+    {% if results %}
+        <h2>Risultati dell'Analisi per {{ results.filename }}</h2>
+        
+        <h3>Statistiche Generali</h3>
+        <ul>
+            <li>Scommesse Totali: {{ results.total_bets }}</li>
+            <li>Vinte: {{ results.wins }}</li>
+            <li>Perse: {{ results.losses }}</li>
+            <li>Nulle: {{ results.voids }}</li>
+            <li>Win Rate: {{ results.win_rate }}</li>
+            <li>Quota Media: {{ results.avg_odds }}</li>
+        </ul>
+
+        <h3>Performance Finanziaria</h3>
+        <ul>
+            <li>Totale Scommesso: {{ results.total_staked }}</li>
+            <li>Profitto Totale: {{ results.total_profit }}</li>
+            <li>ROI: <span style="color: {{ 'green' if results.total_profit > 0 else 'red' }}">{{ results.roi }}</span></li>
+            <li>Max Drawdown: {{ results.max_drawdown }}</li>
+        </ul>
+
+        <h3>Analisi Avanzata</h3>
+        <ul>
+            <li>Sharpe Ratio: {{ results.sharpe_ratio }}</li>
+            <li>Intervallo di Confidenza (95%): {{ results.confidence_interval }}</li>
+            <li>Analisi del Rischio: {{ results.risk_analysis }}</li>
+            <li>Dimensione Campione: {{ results.sample_size_analysis }}</li>
+        </ul>
+        
+    {% endif %}
+
+    <br>
+    <a href="/">Torna alla Home</a>
+</body>
+</html> 

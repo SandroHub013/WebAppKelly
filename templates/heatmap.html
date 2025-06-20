@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heatmap Performance</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .heatmap-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .heatmap-table th, .heatmap-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .heatmap-table th {
+            background-color: #f2f2f2;
+        }
+        .roi-cell {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Heatmap Performance</h1>
+
+    <form action="/heatmap" method="post" enctype="multipart/form-data">
+        <label for="csv_file">Carica il tuo file 'Export Bet-Analytix.csv':</label><br>
+        <input type="file" id="csv_file" name="csv_file" accept=".csv" required><br><br>
+
+        <label for="period">Seleziona il periodo:</label><br>
+        <select name="period" id="period">
+            <option value="all">Tutti i dati</option>
+            <option value="7days">Ultimi 7 giorni</option>
+            <option value="30days">Ultimi 30 giorni</option>
+            <option value="90days">Ultimi 90 giorni</option>
+        </select><br><br>
+
+        <button type="submit">Genera Heatmap</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">Errore: {{ error }}</p>
+    {% endif %}
+
+    {% if results %}
+        <h2>Heatmap per {{ results.filename }} (Periodo: {{ results.period }})</h2>
+        <p>Numero di scommesse analizzate: {{ results.num_rows }}</p>
+
+        <h3>ROI (%) Heatmap</h3>
+        <table class="heatmap-table">
+            <thead>
+                <tr>
+                    <th>Mercato</th>
+                    {% for odds_range in results.odds_ranges %}
+                        <th>{{ odds_range }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for market in results.markets %}
+                <tr>
+                    <td>{{ market }}</td>
+                    {% for odds_range in results.odds_ranges %}
+                        {% set roi_str = results.heatmap_table[market][odds_range] %}
+                        {% if roi_str is not none %}
+                            {% set roi = roi_str[:-1] | float %}
+                            {% set temp = (roi + 100) / 2 %}
+                            {% set red = 255 - (255 * temp / 100) if roi < 0 else 0 %}
+                            {% set green = (255 * temp / 100) if roi >= 0 else 0 %}
+                            {% if roi > 20 %} {% set green = 150 %} {% endif %}
+                            <td class="roi-cell" style="background-color: rgb({{ red }}, {{ green }}, 0);">
+                                {{ roi_str }}
+                            </td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Dati Tabellari</h3>
+        <table class="heatmap-table">
+            <thead>
+                <tr>
+                    <th>Mercato</th>
+                    <th>Fascia Quota</th>
+                    <th>Win Rate</th>
+                    <th>ROI</th>
+                    <th>Nota</th>
+                    <th>Totale Scommesse</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results.raw_data %}
+                <tr>
+                    <td>{{ row['Market'] }}</td>
+                    <td>{{ row['OddsRange'] }}</td>
+                    <td>{{ row['WinRate'] }}</td>
+                    <td>{{ row['ROI'] }}</td>
+                    <td>{{ row['Note'] }}</td>
+                    <td>{{ row['Total'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% endif %}
+
+    <br>
+    <a href="/">Torna alla Home</a>
+
+</body>
+</html> 

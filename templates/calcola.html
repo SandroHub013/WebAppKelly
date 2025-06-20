@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcola Kelly</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Calcola Frazione di Kelly</h1>
+
+    <form action="/calcola" method="post">
+        <label for="odds">Quota:</label><br>
+        <input type="number" step="0.01" id="odds" name="odds" required value="{{ request.form.get('odds', '') }}"><br><br>
+
+        <label for="probability">Probabilità (0-1):</label><br>
+        <input type="number" step="0.01" id="probability" name="probability" required value="{{ request.form.get('probability', '') }}"><br><br>
+        
+        <label for="bankroll">Bankroll:</label><br>
+        <input type="number" step="0.01" id="bankroll" name="bankroll" required value="{{ request.form.get('bankroll', '') }}"><br><br>
+
+        <button type="submit">Calcola</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if results %}
+        <h2>📊 Risultati Calcolo (Bankroll: {{ "%.2f"|format(results.bankroll) }})</h2>
+        <p>Quota: {{ "%.2f"|format(results.odds) }}</p>
+        <p>Probabilità: {{ "%.2f"|format(results.probability) }}</p>
+        <p>Frazione di Kelly: {{ "%.2f"|format(results.kelly_percentage * 100) }}%</p>
+        <hr>
+        <p>Value bet: {{ results.value_bet_text }} | EV: {{ "%.2f"|format(results.ev_per_unit) }}</p>
+        <p>Profitto % atteso: {{ "%.2f"|format(results.expected_profit_percentage) }}%</p>
+        <p>Vantaggio: {{ "%.2f"|format(results.advantage) }}%</p>
+        <p>{{ results.advantage_judgment }}</p>
+        <hr>
+        <h3>Risultati:</h3>
+        <ul>
+        {% for item in results.fraction_lines %}
+            <li>{{ item.label }} Kelly: {{ item.bet_amount }} ({{ item.bet_percentage }}) | Premio: {{ item.prize }}</li>
+        {% endfor %}
+        </ul>
+        
+        <!-- TODO: Add form to save the bet -->
+    {% endif %}
+
+    <br>
+    <a href="/">Torna alla Home</a>
+</body>
+</html> 
