@@ -7,7 +7,7 @@ import io
 from datetime import datetime
 
 router = APIRouter()
-templates = Jinja2Templates(directory="webapp/templates")
+templates = Jinja2Templates(directory="templates")
 
 def calculate_confidence_interval(wins, total, confidence=0.95):
     """Calculate confidence interval for win rate."""

@@ -4,15 +4,10 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from typing import Optional
 
-# Adjusting import path
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from utils.kelly import round_to_nearest_five_cents
 
 router = APIRouter()
-templates = Jinja2Templates(directory="webapp/templates")
+templates = Jinja2Templates(directory="templates")
 
 class KellyResult(BaseModel):
     odds: float

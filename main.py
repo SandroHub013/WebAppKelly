@@ -3,15 +3,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
-from webapp.routers import calcola, backtest, heatmap
+from routers import calcola, backtest, heatmap
 
 app = FastAPI()
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="webapp/static"), name="static")
-app.mount("/assets", StaticFiles(directory="webapp/assets"), name="assets")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 
-templates = Jinja2Templates(directory="webapp/templates")
+templates = Jinja2Templates(directory="templates")
 
 app.include_router(calcola.router)
 app.include_router(backtest.router)

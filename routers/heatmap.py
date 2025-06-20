@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import numpy as np
 
 router = APIRouter()
-templates = Jinja2Templates(directory="webapp/templates")
+templates = Jinja2Templates(directory="templates")
 
 def get_market_from_title(title):
     if pd.isna(title): return "Altro"
