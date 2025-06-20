@@ -1,6 +1,5 @@
 fastapi
 uvicorn[standard]
-scipy==1.13.1
 pillow==10.4.0
 python-dotenv==1.0.1
 pandas==2.2.0

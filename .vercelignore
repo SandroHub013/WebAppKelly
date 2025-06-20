@@ -1,0 +1,13 @@
+# Ignore the example CSV file from the deployment bundle
+utils/Export Bet-Analytix.csv
+
+# Ignore local database files
+*.db
+*.db-journal
+
+# Ignore Python cache
+__pycache__
+
+# Ignore IDE settings and environment files
+.vscode
+.env 
