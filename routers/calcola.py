@@ -3,11 +3,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from typing import Optional
+import os
 
 from utils.kelly import round_to_nearest_five_cents
 
+# Get the absolute path of the project's root directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 class KellyResult(BaseModel):
     odds: float

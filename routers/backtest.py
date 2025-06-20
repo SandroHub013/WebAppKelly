@@ -5,9 +5,13 @@ import pandas as pd
 import numpy as np
 import io
 from datetime import datetime
+import os
+
+# Get the absolute path of the project's root directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 def calculate_confidence_interval(wins, total, confidence=0.95):
     """Calculate confidence interval for win rate."""
